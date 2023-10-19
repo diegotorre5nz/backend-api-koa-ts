@@ -14,4 +14,4 @@ const config: DeepPartial<Config> = {
   },
 }
 
-export = config
+export default config

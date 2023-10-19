@@ -3,4 +3,4 @@ import { type Config } from '..'
 
 const config: DeepPartial<Config> = {}
 
-export = config
+export default config
