@@ -11,7 +11,7 @@ import AppError from './app-error'
  *    }
  */
 export class IdleTimeoutError extends AppError {
-  constructor(message: string) {
+  constructor(message?: string) {
     super(message || 'Site access denied.', 'IDLE_TIMEOUT', 401)
   }
 }

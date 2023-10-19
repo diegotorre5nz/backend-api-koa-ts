@@ -11,7 +11,7 @@ import AppError from './app-error'
  *    }
  */
 export class ConflictError extends AppError {
-  constructor(message: string) {
+  constructor(message?: string) {
     super(
       message || 'The request could not be completed due to a conflict with the current state of the resource.',
       'CONFLICT',
