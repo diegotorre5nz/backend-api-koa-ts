@@ -9,7 +9,7 @@ async function handleErrors(ctx: Context, next: Next): Promise<Boolean | Next> {
   try {
     return await next() as Next
   } catch (err) {
-    let responseError = err
+    let responseError: InternalServerError = err as InternalServerError
 
     if (!(err instanceof AppError)) {
       // This should never happen, log appropriately
