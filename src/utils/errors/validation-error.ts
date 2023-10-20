@@ -11,8 +11,8 @@ import AppError from './app-error'
  *    }
  */
 export class ValidationError extends AppError {
-  constructor(message: string, errors: string) {
-    super(message || 'Invalid or missing request data.', 'BAD_REQUEST', 400)
-    this.message = errors
+  constructor(message?: string, errors?: string) {
+    super(message ?? 'Invalid or missing request data.', 'BAD_REQUEST', 400)
+    this.message = errors ?? ''
   }
 }

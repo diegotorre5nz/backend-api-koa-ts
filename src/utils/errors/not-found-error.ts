@@ -13,7 +13,7 @@ import AppError from './app-error'
 export class NotFoundError extends AppError {
   constructor(message?: string) {
     super(
-      message || 'Resource not found.',
+      message ?? 'Resource not found.',
       'NOT_FOUND',
       404,
     )
