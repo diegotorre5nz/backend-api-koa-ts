@@ -1,6 +1,7 @@
 // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 // eslint-disable-next-line import/no-unused-modules
 import 'dotenv/config'
+import {} from './config'
 import { type Server } from 'http'
 import Koa from 'koa'
 import koaBody from 'koa-body'
@@ -10,6 +11,7 @@ import koaCors from 'kcors'
 // import { v1Routes } from './routes/v1'
 import config from 'config'
 import logger from './utils/logger'
+import { connect as databaseConnect, close as databaseClose } from './database/init'
 
 interface Services {
   server: Server | null
@@ -33,6 +35,9 @@ app.use(koaBody())
 function start(): void {
   // Start any services here:
   // e.g. database connection.
+  
+  databaseConnect()
+
   logger.info('✅ Starting app…')
   services.server = app
     .listen(config.get('server.port'))
@@ -45,6 +50,7 @@ function stop(): void {
   // Stop everything now.
   // e.g. close database connection
   if (services.server) {
+    databaseClose()
     services.server.close()
   }
   logger.info('==> 👋 Stopped app…')
