@@ -57,6 +57,7 @@ export interface Config {
   }
   apolloEngineApiKey: string | undefined
 }
+
 export function getEnvironmentValue(key: string, value: string): string {
   return process.env[key] ?? value
 }

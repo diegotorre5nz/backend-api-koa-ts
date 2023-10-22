@@ -1,7 +1,10 @@
-import { type Config } from '..'
+import { type Config, getEnvironmentValue } from '..'
 
-const config: Partial<Config> = {
-  hostname: 'http://localhost:3000',
+const config: DeepPartial<Config> = {
+  hostname: getEnvironmentValue('HOST_NAME', 'http://localhost:3000'),
+  database: {
+    connection: 'postgres://postgres:postgres@localhost:5432/backend-api-db',
+  },
 }
 
 export default config

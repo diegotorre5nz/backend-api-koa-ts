@@ -1,5 +1,6 @@
 import { type Config } from '..'
 
-const config: DeepPartial<Config> = {}
+const config: DeepPartial<Config> = {
+}
 
 export default config

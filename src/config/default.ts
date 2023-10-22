@@ -3,7 +3,7 @@ import { getEnvironmentValue } from '.'
 
 const config: Config = {
   hostname: 'http://localhost:3000',
-  env: 'NODE_ENV',
+  env: getEnvironmentValue('NODE_ENV', 'dev-local'),
   appName: 'backend-api-koa',
   version: '0.0.1',
   server: {
@@ -56,13 +56,13 @@ const config: Config = {
       'postgres://postgres:postgres@localhost:5432/backend-api-db',
     ),
     pool: {
-      min: Number(process.env.DATABASE_POOL_MIN) || 0,
-      max: Number(process.env.DATABASE_POOL_MAX) || 5,
+      min: Number(getEnvironmentValue('DATABASE_POOL_MIN', '0')),
+      max: Number(getEnvironmentValue('DATABASE_POOL_MAX', '5')),
     },
   },
   aws: {
     s3: {
-      bucketName: process.env.AWS_S3_BUCKET_NAME,
+      bucketName: getEnvironmentValue('AWS_S3_BUCKET_NAME', ''),
     },
     rekognition: {
       minConfidence: 90,
@@ -71,7 +71,7 @@ const config: Config = {
   jobs: {
     redisUrl: getEnvironmentValue('REDIS_URL', 'redis://127.0.0.1:6379'),
   },
-  apolloEngineApiKey: process.env.APOLLO_ENGINE_API_KEY,
+  apolloEngineApiKey: getEnvironmentValue('APOLLO_ENGINE_API_KEY', ''),
 }
 
 export default config
