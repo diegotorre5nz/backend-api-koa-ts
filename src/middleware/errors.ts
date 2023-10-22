@@ -17,7 +17,7 @@ async function handleErrors(ctx: Context, next: Next): Promise<Boolean | Next> {
       responseError = new InternalServerError()
     }
     // Prepare error response
-    const isDevelopment = ['local', 'test', 'development'].includes(config.get('env'))
+    const isDevelopment = ['dev-local', 'test', 'development'].includes(config.get('env'))
     ctx.status = Number(responseError.status)
     ctx.body = {
       type: String(responseError.type),
