@@ -9,9 +9,10 @@ import knexLib from 'knex'
 import R from 'ramda'
 import config from 'config'
 import logger from '../utils/logger'
-import knexEnvConfig from '../config/knexfile'
-const knexConfig: Object = R.mergeDeepWith(Object({}), knexEnvConfig['default'][String(config.get('env'))], objection.knexSnakeCaseMappers())
-const knex = knexLib(Object(knexConfig))
+import knexConfig from '../config/knexfile'
+const knexEnvConfig = knexConfig[String(config.get('env'))]
+const knexConfigMerged: Object = R.mergeDeepWith(Object({}), knexEnvConfig, objection.knexSnakeCaseMappers())
+const knex = knexLib(Object(knexConfigMerged))
 
 const Model = objection.Model
 Model.knex(knex)
