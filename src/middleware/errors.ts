@@ -5,7 +5,7 @@ import { InternalServerError, NotFoundError } from '../utils/errors'
 import AppError from '../utils/errors/app-error'
 import logger from '../utils/logger'
 
-async function handleErrors(ctx: Context, next: Next): Promise<Boolean | Next> {
+export async function handleErrors(ctx: Context, next: Next): Promise<Boolean | Next> {
   try {
     return await next() as Next
   } catch (err) {
@@ -28,11 +28,6 @@ async function handleErrors(ctx: Context, next: Next): Promise<Boolean | Next> {
   }
 }
 
-function handleNotFound(): AppError {
+export function handleNotFound(): AppError {
   throw new NotFoundError()
-}
-
-export {
-  handleErrors,
-  handleNotFound,
 }
