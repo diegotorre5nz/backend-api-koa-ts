@@ -14,10 +14,10 @@ export default class AppError extends Error {
     const stack = this.stack ? this.stack.split('\n') : this.stack
     logger.error({
       error: {
-        status,
+        status: this.status,
         name: this.name,
         message: this.message,
-        type,
+        type: this.message,
         stack: stack && stack.length > 2 ? `${stack[0]}  ${stack[1]}` : stack,
       },
     })

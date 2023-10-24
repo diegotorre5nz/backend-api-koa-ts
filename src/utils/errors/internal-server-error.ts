@@ -12,10 +12,9 @@ import AppError from './app-error'
  */
 export class InternalServerError extends AppError {
   constructor(message?: string) {
-    super(
-      message ?? 'Something went wrong. Please try again later or contact support.',
-      'INTERNAL_SERVER',
-      500,
+    super(message ?? 'Something went wrong. Please try again later or contact support.',
+    'INTERNAL_SERVER',
+    500,
     )
   }
 }
