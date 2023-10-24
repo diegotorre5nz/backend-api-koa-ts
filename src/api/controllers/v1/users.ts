@@ -7,7 +7,7 @@ import * as schema from '../../validations/schemas/v1/users'
 import  { userWithTokens } from '../../serializers/user'
 
 export const create = compose([
-  validate({ body: schema.create }),
+  validate( schema.create ),
   async (ctx: Context): Promise<void> => {
     const inputData: CreateUserInput = {
       email: ctx.request.body.email,
