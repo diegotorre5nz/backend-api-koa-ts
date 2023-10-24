@@ -1,17 +1,16 @@
 // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 // eslint-disable-next-line import/no-unused-modules
 import 'dotenv/config'
-import {} from './config'
 import { type Server } from 'http'
 import Koa from 'koa'
 import koaBody from 'koa-body'
 import koaCompress from 'koa-compress'
 import koaHelmet from 'koa-helmet'
 import koaCors from 'kcors'
-// import { v1Routes } from './routes/v1'
+import { v1Routes } from './routes/v1'
 import config from 'config'
-import logger from './utils/logger'
-import { connect as databaseConnect, close as databaseClose } from './database/init'
+import logger from '../utils/logger'
+import { connect as databaseConnect, close as databaseClose } from '../database/init'
 
 interface Services {
   server: Server | null
@@ -29,7 +28,7 @@ app.use(koaHelmet())
 app.use(koaCompress())
 app.use(koaCors())
 app.use(koaBody())
-// app.use(v1Routes)
+app.use(v1Routes)
 
 // Define start method
 function start(): void {
