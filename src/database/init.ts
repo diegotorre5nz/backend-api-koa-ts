@@ -12,7 +12,6 @@ import logger from '../utils/logger'
 import knexConfig from '../config/knexfile'
 const knexEnvConfig = knexConfig[String(config.get('env'))]
 const knexConfigMerged: Object = R.mergeDeepWith(Object({}), knexEnvConfig, objection.knexSnakeCaseMappers())
-console.log(knexConfigMerged)
 const knex = knexLib(Object(knexConfigMerged))
 
 const Model = objection.Model
@@ -26,11 +25,15 @@ function connect() {
   return knex.raw('select 1 + 1')
 }
 
-
+function close() {
+  logger.info('🛑 Database connection Closed...')
+  return knex.destroy()
+}
 
 export {
   Model,
   knex,
   transaction,
   connect,
+  close,
 }
