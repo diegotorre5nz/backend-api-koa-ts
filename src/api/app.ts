@@ -31,11 +31,10 @@ app.use(koaBody())
 app.use(v1Routes)
 
 // Define start method
-function start(): void {
+async function start(): Promise<void> {
   // Start any services here:
   // e.g. database connection.
-  
-  databaseConnect()
+  await databaseConnect()
 
   logger.info('✅ Starting app…')
   services.server = app

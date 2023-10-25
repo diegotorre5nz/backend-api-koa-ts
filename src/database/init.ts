@@ -13,7 +13,6 @@ import knexConfig from '../config/knexfile'
 const knexEnvConfig = knexConfig[String(config.get('env'))]
 const knexConfigMerged: Object = R.mergeDeepWith(Object({}), knexEnvConfig, objection.knexSnakeCaseMappers())
 const knex = knexLib(Object(knexConfigMerged))
-
 const Model = objection.Model
 Model.knex(knex)
 const transaction = objection.transaction
