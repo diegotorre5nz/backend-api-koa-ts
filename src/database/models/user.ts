@@ -7,8 +7,8 @@ export class User extends BaseModel {
   static tableName = 'users'
 
   email: string
+  name: string
   password: string
-  role: string
 
   protected $transformJSON = {
     omit: ['password', 'deletedAt'],

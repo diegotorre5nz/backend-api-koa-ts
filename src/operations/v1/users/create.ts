@@ -2,7 +2,7 @@ import { ConflictError } from "../../../utils/errors"
 import { User } from "../../../database/models/user"
 import { userRepository } from "../../../database/repositories/user"
 import { Operation } from "../../operation"
-export type Input = Pick<User, 'email' | 'password'> 
+export type Input = Pick<User, 'name' | 'email' | 'password'> 
 
 export interface Output {
   user: User

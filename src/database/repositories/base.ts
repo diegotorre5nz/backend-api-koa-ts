@@ -44,7 +44,7 @@ export class BaseRepository<T extends BaseModel>{
   }
 
   findById(id: number): MaybeSingleQueryBuilder<QueryBuilderType<T>> {
-    return this.query().where({ deleteAt: null }).findById(id)
+    return this.query().where({ deletedAt: null }).findById(id)
   }
 
   patchById(id: number, data: object): SingleQueryBuilder<QueryBuilderType<T>> {

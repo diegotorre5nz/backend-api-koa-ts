@@ -10,10 +10,14 @@ export const create = compose([
   validate( schema.create ),
   async (ctx: Context): Promise<void> => {
     const inputData: CreateUserInput = {
+      name: ctx.request.body.name,
       email: ctx.request.body.email,
       password: ctx.request.body.password,
     }
+    
     const operationResult: createUserOutput = await createUser.execute(inputData)
-    ctx.created(userWithTokens(operationResult.user, 'accessToken-fake', 'refreshToken-kake'))
+    //ctx.created(userWithTokens(operationResult.user, 'accessToken-fake', 'refreshToken-kake'))
+    ctx.status = 201
+    ctx.body = userWithTokens(operationResult.user, 'accessToken-fake', 'refreshToken-kake')
   },
 ])
