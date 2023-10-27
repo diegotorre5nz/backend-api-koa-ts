@@ -1,5 +1,5 @@
 import Router from 'koa-router'
-import { handleErrors, handleNotFound } from '../../middleware/errors'
+import { handleErrors, handleNotFound } from '../middleware/errors'
 import * as controllers from '../controllers/v1'
 import { Context } from 'koa'
 

@@ -30,6 +30,21 @@ app.use(koaCors())
 app.use(koaBody())
 app.use(v1Routes)
 
+app.context.ok = function(body: Object): void {
+  this.status = 200
+  this.body = body
+}
+
+app.context.created = function(body: Object): void {
+  this.status = 201
+  this.body = body
+}
+
+app.context.acepted = function(body: Object): void {
+  this.status = 202
+  this.body = body
+}
+
 // Define start method
 async function start(): Promise<void> {
   // Start any services here:

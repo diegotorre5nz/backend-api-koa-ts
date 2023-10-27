@@ -1,9 +1,9 @@
 // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import config from 'config'
 import { type Context, type Next } from 'koa'
-import { InternalServerError, NotFoundError } from '../utils/errors'
-import AppError from '../utils/errors/app-error'
-import logger from '../utils/logger'
+import { InternalServerError, NotFoundError } from '../../utils/errors'
+import AppError from '../../utils/errors/app-error'
+import logger from '../../utils/logger'
 
 export async function handleErrors(ctx: Context, next: Next): Promise<Boolean | Next> {
   try {

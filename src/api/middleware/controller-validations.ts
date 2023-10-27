@@ -1,8 +1,8 @@
 import type { Context, Middleware, Next } from 'koa'
 import jsonschema, {ValidatorResult, ValidationError as JsonValidationError} from 'jsonschema'
-import { ValidationError } from '../utils/errors'
+import { ValidationError } from '../../utils/errors'
 
-export function validate( schema: any): Middleware {
+export function validate( schema: any): any {
   return async (ctx: Context, next: Next): Promise<Middleware> => {
       const validator = new jsonschema.Validator()
       const inputData: Object = Object(ctx.request.body)
