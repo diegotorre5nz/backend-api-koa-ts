@@ -1,7 +1,7 @@
 import { Model } from '../init'
 
 export class BaseModel extends Model {
-
+  id: number
   updatedAt: Date 
   createdAt: Date
 

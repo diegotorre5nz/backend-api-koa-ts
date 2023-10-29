@@ -31,17 +31,17 @@ const config: Config = {
   auth: {
     secret: getEnvironmentValue(
       'AUTH_SECRET',
-      'htfq4o3bcyriq4wyvtcbyrwqv3fy53bprogc',
+      'htfq4o3bcyriq4wdfgdyvtcbyrwfggfhdqv3fy53bprogc',
     ),
     saltRounds: 10,
     createOptions: {
       expiresIn: 60 * 60,
       algorithm: 'HS256',
-      issuer: 'com.reload.backend-api.}',
+      issuer: 'com.reloaded.backend-api.}',
     },
     verifyOptions: {
       algorithm: 'HS256',
-      issuer: 'com.reload.backend-api.}',
+      issuer: 'com.reloaded.backend-api.}',
     },
   },
   logger: {
