@@ -25,8 +25,10 @@
     "@strv/eslint-config-base": "^3.4.0",
     "@strv/eslint-config-node": "^3.3.1",
     "@strv/eslint-config-typescript": "^4.1.2",
+    "@types/bcrypt": "^5.0.1",
     "@types/config": "^3.3.1",
     "@types/dotenv": "^8.2.0",
+    "@types/jsonwebtoken": "^9.0.4",
     "@types/kcors": "^2.2.6",
     "@types/koa": "^2.13.9",
     "@types/koa-compress": "^4.0.4",
@@ -46,9 +48,11 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "config": "^3.3.9",
     "dotenv": "^16.3.1",
     "jsonschema": "^1.4.1",
+    "jsonwebtoken": "^9.0.2",
     "kcors": "^2.2.2",
     "koa": "^2.14.2",
     "koa-body": "^6.0.1",
