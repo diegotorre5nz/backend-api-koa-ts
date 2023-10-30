@@ -6,6 +6,9 @@ const config: Config = {
   env: getEnvironmentValue('NODE_ENV', 'dev-local'),
   appName: 'backend-api-koa',
   version: '0.0.1',
+  time: {
+    utcOffset: -6,
+  },
   server: {
     port: Number(getEnvironmentValue('PORT', '3001')),
     bodyParser: {
@@ -34,14 +37,17 @@ const config: Config = {
       'htfq4o3bcyriq4wdfgdyvtcbyrwfggfhdqv3fy53bprogc',
     ),
     saltRounds: 10,
+    accessTokenExpiration: 60 * 60 * 1000,
+    refreshTokenExpiration: 24 * 60 * 60 * 1000,
+    issuer: 'com.reloaded.backend-api',
     createOptions: {
       expiresIn: 60 * 60,
       algorithm: 'HS256',
-      issuer: 'com.reloaded.backend-api.}',
+      issuer: 'com.reloaded.backend-api',
     },
     verifyOptions: {
       algorithm: 'HS256',
-      issuer: 'com.reloaded.backend-api.}',
+      issuer: 'com.reloaded.backend-api',
     },
   },
   logger: {

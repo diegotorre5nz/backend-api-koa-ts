@@ -28,7 +28,6 @@ export class User extends BaseModel {
     }
   }
 
-  //TODO: Add hashPassword
   async $beforeInsert(): Promise<void> {
     if (this.password) {
       this.password = await hashPassword(this.password)

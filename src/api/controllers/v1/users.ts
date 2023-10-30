@@ -16,6 +16,6 @@ export const create = compose([
     }
     
     const operationResult: createUserOutput = await createUser.execute(inputData)
-    ctx.created(userWithTokens(operationResult.user, operationResult.accessToken))
+    ctx.created(userWithTokens(operationResult.user, operationResult.accessToken, operationResult.refreshToken))
   },
 ])

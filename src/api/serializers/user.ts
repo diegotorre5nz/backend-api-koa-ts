@@ -1,7 +1,7 @@
  import moment from 'moment'
  import { User } from '../../database/models/user'
  import { AccessToken } from '../../services/internal/access-tokens'
- import config from 'config'
+ import { RefreshToken } from '../../services/internal/refresh-tokens'
 
  export interface UserWithTokens {
   user: User
@@ -15,13 +15,13 @@
   refreshTokenExpiresAt: Date
 }
 
- export const userWithTokens = (user: User, accessToken: AccessToken): UserWithTokens => ({
+ export const userWithTokens = (user: User, accessToken: AccessToken, refreshToken: RefreshToken): UserWithTokens => ({
   user,
   authorization: {
     accessToken: accessToken.token,
     accessTokenExpiresAt: accessToken.expiresAt,
-    refreshToken: accessToken.token,
-    refreshTokenExpiresAt: accessToken.expiresAt,
+    refreshToken: refreshToken.token,
+    refreshTokenExpiresAt: refreshToken.expiresAt,
   }
  })
 

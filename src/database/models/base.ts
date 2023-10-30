@@ -4,12 +4,14 @@ export class BaseModel extends Model {
   id: number
   updatedAt: Date 
   createdAt: Date
+  deletedAt: Date
 
-  $beforeInsert() {
-    this.updatedAt = this.createdAt = this.createdAt || new Date()
+  async $beforeInsert(): Promise<void> {
+    this.updatedAt = new Date()
+    this.createdAt = new Date()
   }
 
-  $beforeUpdate() {
+  async $beforeUpdate(): Promise<void> {
     this.updatedAt = new Date()
   }
 }

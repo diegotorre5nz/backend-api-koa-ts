@@ -3,7 +3,8 @@ import { User } from "../../../database/models/user"
 import { userRepository } from "../../../database/repositories/user"
 import { Operation } from "../../operation"
 import { AccessToken, newAccessToken } from "../../../services/internal/access-tokens"
-import { hashString } from "../../../utils/crypto"
+import { hashPassword } from "../../../utils/crypto"
+import { newRefreshToken } from "../../../services/internal/refresh-tokens"
 
 export type Input = Pick<User, 'name' | 'email' | 'password'> 
 
@@ -25,16 +26,17 @@ class CreateUser extends Operation<Input, Output> {
     const userData = {
       name,
       email,
-      password: hashString(password)
+      password,
     }
     
     const newUser: User = await userRepository.insert(userData)
     const accessTokenData = newAccessToken(newUser.id)
+    const refreshTokenData = newRefreshToken(newUser.id)
 
     return { 
       user: newUser,
       accessToken: accessTokenData,
-      refreshToken: accessTokenData
+      refreshToken: refreshTokenData
     }
    }
 }

@@ -3,6 +3,9 @@ export interface Config {
   env: string
   appName: string
   version: string
+  time: {
+    utcOffset: number
+  }
   server: {
     port: number
     bodyParser: {
@@ -21,6 +24,9 @@ export interface Config {
   auth: {
     secret: string
     saltRounds: number
+    accessTokenExpiration: number
+    refreshTokenExpiration: number
+    issuer: string
     createOptions: {
       expiresIn: number
       algorithm: string
