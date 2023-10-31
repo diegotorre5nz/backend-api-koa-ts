@@ -7,6 +7,7 @@ const router = new Router<{}, Context> ({ prefix: '/v1' })
 
 router.use(handleErrors)
 router.post('/users', controllers.user.create)
+router.get('/users/me', controllers.user.me)
 router.use(handleNotFound)
 
 export const v1Routes = router.routes()
