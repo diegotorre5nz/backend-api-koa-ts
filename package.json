@@ -13,9 +13,9 @@
     "lint": "eslint . --ext .ts --report-unused-disable-directives",
     "lint:fix": "eslint . --ext .ts --fix",
     "snyk": "snyk auth $SNYK_TOKEN && snyk test",
-    "migrate:make": "knex migrate:make --knexfile ./src/database/knexfile.js",
-    "db:migrate": "knex migrate:latest --knexfile ./src/database/knexfile.js",
-    "db:rollback": "knex migrate:rollback --knexfile ./src/database/knexfile.js",
+    "migrate:make": "knex migrate:make --knexfile ./dist/src/config/knexfile.js",
+    "db:migrate": "NODE_CONFIG_DIR=/Users/diego/dev/node/backend-api-koa-ts/src/config:/Users/diego/dev/node/backend-api-koa-ts/src/config/env knex migrate:latest --knexfile ./dist/src/config/knexfile.js",
+    "db:rollback": "knex migrate:rollback --knexfile ./dist/src/config/knexfile.js",
     "infra": "docker-compose up -d",
     "infra:stop": "docker-compose down"
   },
