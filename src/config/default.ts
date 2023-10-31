@@ -37,7 +37,7 @@ const config: Config = {
       'htfq4o3bcyriq4wdfgdyvtcbyrwfggfhdqv3fy53bprogc',
     ),
     saltRounds: 10,
-    accessTokenExpiration: 60 * 60 * 1000,
+    accessTokenExpiration: 1,
     refreshTokenExpiration: 24 * 60 * 60 * 1000,
     issuer: 'com.reloaded.backend-api',
     createOptions: {
