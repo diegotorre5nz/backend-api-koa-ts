@@ -3,14 +3,19 @@ import {sign, verify, JsonWebTokenError, Jwt} from 'jsonwebtoken'
 import moment from 'moment'
 
 export interface RefreshToken {
+  userId: number,
+  ipAddress: string,
   token: string,
-  expiresAt: Date,
+  expiresAt: Date | moment.Moment,
 }
-
-export function generateRefreshToken(userId: number): string {
+// TODO: ADD IP ADDRESS TO generateRefreshToken
+export function generateRefreshToken(userId: number, ipAddress: string): string {
+  
   return sign({
-      userId },
-     config.get('auth.secret'), 
+      userId,
+      ipAddress 
+    },
+    config.get('auth.secret'), 
      { 
       expiresIn: config.get('auth.refreshTokenExpiration'), 
       algorithm: config.get('auth.createOptions.algorithm'),
@@ -19,7 +24,7 @@ export function generateRefreshToken(userId: number): string {
 }
 
 export function verifyRefreshToken(accessToken: string): Jwt | null {
-  try {
+  try { // TODO ADD REFRESH TOKEN
     // Don't return directly for catch block to work properly
     const data = verify(accessToken, config.get('auth.secret'), config.get('auth.verifyOptions'))
     return data
@@ -31,7 +36,9 @@ export function verifyRefreshToken(accessToken: string): Jwt | null {
   }
 }
 
-export const newRefreshToken = (userId: number): RefreshToken => ({
-  token: generateRefreshToken(userId),
+export const newRefreshToken = (userId: number, ipAddress: string): RefreshToken => ({
+  userId,
+  ipAddress,
+  token: generateRefreshToken(userId, ipAddress),
   expiresAt: moment().add(config.get('auth.refreshTokenExpiration'), 'milliseconds').toDate(),
 })

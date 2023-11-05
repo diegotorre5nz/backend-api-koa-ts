@@ -12,7 +12,7 @@
   accessToken: string
   accessTokenExpiresAt: Date | moment.Moment
   refreshToken: string
-  refreshTokenExpiresAt: Date
+  refreshTokenExpiresAt: Date | moment.Moment
 }
 
  export const userWithTokens = (user: User, accessToken: AccessToken, refreshToken: RefreshToken): UserWithTokens => ({

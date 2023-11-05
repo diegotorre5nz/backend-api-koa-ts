@@ -34,7 +34,7 @@ async function getAuthPayload(authorization: any) {
   return data
 }
 
-export async function authenticate(ctx: Context, next: Next) {
+export async function authenticated(ctx: Context, next: Next) {
   if (!ctx) {
     throw new Error('Context has to be defined')
   }
@@ -42,7 +42,7 @@ export async function authenticate(ctx: Context, next: Next) {
   if (!data) {
     throw new UnauthorizedError()
   }
-  ctx.state.userId = data.userId // TODO Get the full user object
+  ctx.state.userId = data.userId
   return next()
 }
 
@@ -91,5 +91,5 @@ async function verifyTokenPayload(input: any): Promise<Jwt> {
 
 module.exports = {
   getAuthPayload,
-  authenticate,
+  authenticated,
 }

@@ -36,7 +36,6 @@ export class User extends BaseModel {
 
   async $beforeUpdate(): Promise<void> {
     super.$beforeUpdate()
-
     if(this.password) {
       this.password = await hashPassword(this.password) // eslint-disable-line require-atomic-updates
     }

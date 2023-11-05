@@ -3,6 +3,7 @@ import {sign, verify, JsonWebTokenError, Jwt} from 'jsonwebtoken'
 import moment from 'moment'
 
 export interface AccessToken {
+  userId: number
   token: string,
   expiresAt: Date,
 }
@@ -32,6 +33,7 @@ export function verifyAccessToken(accessToken: string): Jwt | null {
 }
 
 export const newAccessToken = (userId: number): AccessToken => ({
+  userId,
   token: generateAccessToken(userId),
   expiresAt: moment().add(config.get('auth.accessTokenExpiration'), 'milliseconds').toDate(),
 })
