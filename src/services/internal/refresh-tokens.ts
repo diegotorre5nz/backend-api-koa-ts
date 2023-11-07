@@ -1,13 +1,21 @@
+import { UnauthorizedError } from '../../utils/errors'
 import config from 'config'
-import {sign, verify, JsonWebTokenError, Jwt} from 'jsonwebtoken'
+import {sign, verify, JsonWebTokenError, Jwt, JwtPayload} from 'jsonwebtoken'
 import moment from 'moment'
 
 export interface RefreshToken {
-  userId: number,
-  ipAddress: string,
   token: string,
+  issuedAt: Date
   expiresAt: Date | moment.Moment,
+  ipAddress: string,
+  userId: number,
 }
+
+export interface RefreshTokenPayload {
+  ipAddress: string,
+  userId: number,
+}
+
 // TODO: ADD IP ADDRESS TO generateRefreshToken
 export function generateRefreshToken(userId: number, ipAddress: string): string {
   
@@ -23,16 +31,16 @@ export function generateRefreshToken(userId: number, ipAddress: string): string 
     })
 }
 
-export function verifyRefreshToken(accessToken: string): Jwt | null {
-  try { // TODO ADD REFRESH TOKEN
+export function verifyRefreshToken(accessToken: string): JwtPayload {
+  try {
     // Don't return directly for catch block to work properly
-    const data = verify(accessToken, config.get('auth.secret'), config.get('auth.verifyOptions'))
+    const data: JwtPayload = verify(accessToken, config.get('auth.secret'), config.get('auth.verifyOptions'))
     return data
   } catch (err) {
     if (err instanceof JsonWebTokenError || err instanceof SyntaxError) {
-      return null
+      throw new UnauthorizedError(err.message)
     }
-    throw err
+    throw new UnauthorizedError()
   }
 }
 
@@ -40,5 +48,6 @@ export const newRefreshToken = (userId: number, ipAddress: string): RefreshToken
   userId,
   ipAddress,
   token: generateRefreshToken(userId, ipAddress),
+  issuedAt: moment().toDate(),
   expiresAt: moment().add(config.get('auth.refreshTokenExpiration'), 'milliseconds').toDate(),
 })

@@ -2,7 +2,7 @@ import { join } from 'path'
 import type { Pojo, RelationMappings } from 'objection'
 import { Model } from 'objection'
 import { BaseModel } from './base'
-import { hashPassword } from '../../utils/crypto'
+import { hashString } from '../../utils/crypto'
 
 export class User extends BaseModel {
   static tableName = 'users'
@@ -19,25 +19,28 @@ export class User extends BaseModel {
     return {
       refreshToken: {
         relation: Model.HasManyRelation,
-        modelClass: join(__dirname, 'refresh-token'),
+        modelClass: join(__dirname, 'refresh_tokens'),
         join: {
           from: 'users.id',
-          to: 'refreshToken.userId',
+          to: 'refresh_tokens.userId',
         },
       },
     }
   }
 
   async $beforeInsert(): Promise<void> {
+    super.$beforeInsert()
+
     if (this.password) {
-      this.password = await hashPassword(this.password)
+      this.password = await hashString(this.password)
     }
   }
 
   async $beforeUpdate(): Promise<void> {
     super.$beforeUpdate()
+
     if(this.password) {
-      this.password = await hashPassword(this.password) // eslint-disable-line require-atomic-updates
+      this.password = await hashString(this.password) // eslint-disable-line require-atomic-updates
     }
   }
 

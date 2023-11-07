@@ -4,7 +4,7 @@ import * as schema from '../validations/schemas/v1/users'
 import { UnauthorizedError } from '../../utils/errors'
 import logger from '../../utils/logger'
 import { verifyAccessToken } from '../../services/internal/access-tokens'
-import { verify, Jwt } from 'jsonwebtoken'
+import { verify, Jwt, JsonWebTokenError, JwtPayload } from 'jsonwebtoken'
 import config from 'config'
 
 interface Payload {
@@ -57,17 +57,18 @@ function parseHeader(hdrValue: any) {
   }
 }
 
-async function verifyTokenPayload(input: any): Promise<Jwt> {
+async function verifyTokenPayload(input: any): Promise<JwtToken> {
   logger.info({ input }, 'verifyTokenPayload')
   try {
     var decoded = verify(input.jwtToken, config.get('auth.secret'))
-    const jwtPayload: Jwt | null = await verifyAccessToken(input.jwtToken)
+    const jwtPayload: JwtPayload | JsonWebTokenError = await verifyAccessToken(input.jwtToken)
+    const accessTokenPayload = jwtPayload as JwtToken
     if(!jwtPayload){
       throw new UnauthorizedError()
     }
-    console.log(jwtPayload)
+    console.log(accessTokenPayload)
     //const userId = parseInt(jwtPayload.userId)
-    return jwtPayload
+    return accessTokenPayload
   } catch(err: any) {
     throw new UnauthorizedError(JSON.stringify(err))
   }
