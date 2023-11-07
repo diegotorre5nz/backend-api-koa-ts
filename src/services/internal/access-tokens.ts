@@ -1,20 +1,23 @@
+import { refreshTokenRepository } from '../../database/repositories/refresh-token'
+import { RefreshToken as RefreshTokenModel } from "../../database/models/refresh-token"
 import config from 'config'
-import {sign, verify, JsonWebTokenError, Jwt, JwtPayload} from 'jsonwebtoken'
+import {sign, verify, JsonWebTokenError, JwtPayload} from 'jsonwebtoken'
+import { UnauthorizedError } from '../../utils/errors'
 import moment from 'moment'
 
 export interface AccessToken {
-  userId: number
+  userId: number,
   token: string,
   expiresAt: Date,
 }
 
 export interface AccessTokenPayload {
-  userId: number
+  userId: number,
+  refreshToken: string
 }
 
-export function generateAccessToken(userId: number): string {
-  return sign({
-    userId },
+export function generateAccessToken(payload: AccessTokenPayload): string {
+  return sign(payload,
    config.get('auth.secret'), 
    { 
     expiresIn: config.get('auth.accessTokenExpiration'), 
@@ -23,10 +26,20 @@ export function generateAccessToken(userId: number): string {
   })
 }
 
-export function verifyAccessToken(accessToken: string): JwtPayload {
+export async function verifyAccessToken(accessToken: string): Promise<JwtPayload> {
   try {
     // Don't return directly for catch block to work properly
     const data: JwtPayload | JsonWebTokenError = verify(accessToken, config.get('auth.secret'), config.get('auth.verifyOptions'))
+    const accessTokenPayload = data as AccessToken
+    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.query()
+    .findOne({ token: accessTokenPayload.token, userId: accessTokenPayload.userId })
+    .withGraphJoined('[user]')
+    .whereRaw('"refresh_tokens"."deleted_at" IS NULL AND "refresh_tokens"."revoked_at" IS NULL AND  "user"."deleted_at" IS NULL')
+    
+    // RefreshToken or User doesn't exists in the db
+    if (!existingRefreshToken) {
+      throw new UnauthorizedError('Refresh Token revoked.')
+    }
     return data
   } catch (err) {
     if (err instanceof JsonWebTokenError || err instanceof SyntaxError) {
@@ -36,8 +49,8 @@ export function verifyAccessToken(accessToken: string): JwtPayload {
   }
 }
 
-export const newAccessToken = (userId: number): AccessToken => ({
-  userId,
-  token: generateAccessToken(userId),
+export const newAccessToken = (payload: AccessTokenPayload): AccessToken => ({
+  userId: payload.userId,
+  token: generateAccessToken(payload),
   expiresAt: moment().add(config.get('auth.accessTokenExpiration'), 'milliseconds').toDate(),
 })

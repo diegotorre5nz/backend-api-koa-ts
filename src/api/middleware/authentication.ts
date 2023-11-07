@@ -3,21 +3,9 @@ import { validate } from '../middleware/controller-validations'
 import * as schema from '../validations/schemas/v1/users'
 import { UnauthorizedError } from '../../utils/errors'
 import logger from '../../utils/logger'
-import { verifyAccessToken } from '../../services/internal/access-tokens'
+import { AccessToken, verifyAccessToken } from '../../services/internal/access-tokens'
 import { verify, Jwt, JsonWebTokenError, JwtPayload } from 'jsonwebtoken'
 import config from 'config'
-
-interface Payload {
-  loginTimeout: number,
-  user: number,
-}
-
-interface JwtToken extends Jwt {
-  userId: number,
-  iat: number,
-  exp: number,
-  iss: string
-}
 
 async function getAuthPayload(authorization: any) {
   const parsedHeader = parseHeader(authorization)
@@ -30,7 +18,7 @@ async function getAuthPayload(authorization: any) {
   }
   const input = { jwtToken: parsedHeader.value }
   validate(schema.jwtToken, input)
-  const data: Jwt  = await verifyTokenPayload(input)
+  const data: AccessToken  = await verifyTokenPayload(input)
   return data
 }
 
@@ -38,11 +26,13 @@ export async function authenticated(ctx: Context, next: Next) {
   if (!ctx) {
     throw new Error('Context has to be defined')
   }
-  const data: JwtToken | null = await getAuthPayload(ctx.header.authorization) as JwtToken
-  if (!data) {
+  const data: JwtPayload | null = await getAuthPayload(ctx.header.authorization) as JwtPayload
+  const refreshTokenData = data as AccessToken
+  if (!refreshTokenData) {
     throw new UnauthorizedError()
   }
-  ctx.state.userId = data.userId
+
+  ctx.state.userId = refreshTokenData.userId
   return next()
 }
 
@@ -57,12 +47,12 @@ function parseHeader(hdrValue: any) {
   }
 }
 
-async function verifyTokenPayload(input: any): Promise<JwtToken> {
+async function verifyTokenPayload(input: any): Promise<AccessToken> {
   logger.info({ input }, 'verifyTokenPayload')
   try {
     var decoded = verify(input.jwtToken, config.get('auth.secret'))
     const jwtPayload: JwtPayload | JsonWebTokenError = await verifyAccessToken(input.jwtToken)
-    const accessTokenPayload = jwtPayload as JwtToken
+    const accessTokenPayload = jwtPayload as AccessToken
     if(!jwtPayload){
       throw new UnauthorizedError()
     }

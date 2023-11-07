@@ -23,22 +23,36 @@ class RefreshSession extends Operation<Input, Output> {
 
     const tokenVerified = jwtVerified as RefreshTokenPayload
 
-    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.findOneBy({ token, userId: tokenVerified.userId , ipAddress })
+    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.query()
+    .findOne({ token })
+    .withGraphJoined('[user]')
+    .whereRaw('"refresh_tokens"."deleted_at" IS NULL AND "refresh_tokens"."revoked_at" IS NULL AND  "user"."deleted_at" IS NULL')
     
+    // RefreshToken or User doesn't exists in the db
     if (!existingRefreshToken) {
+      throw new UnauthorizedError()
+    }
+    
+    // Token exists in the db but it doenst match the userId and ipAddress
+    if (!(existingRefreshToken.userId == tokenVerified.userId) || !(existingRefreshToken.ipAddress == ipAddress) ) {
+      // Token is revoked and deleted, so all it's derived AccessTokens will be desabled as well
+      await refreshTokenRepository.patchById(existingRefreshToken.id,{revokedAt: new Date(), deletedAt: new Date()})
       throw new UnauthorizedError()
     }
 
     const existingUser: User | undefined = await userRepository.findById(tokenVerified.userId)
     
-    if (!existingUser) {
+    if (!existingRefreshToken.user) {
       throw new UnauthorizedError()
     }
 
-    const accessTokenData = newAccessToken(existingUser.id)
+    const accessTokenData = newAccessToken( { 
+      userId: existingRefreshToken.userId, 
+      refreshToken: existingRefreshToken.token
+    })
     
     return { 
-      user: existingUser,
+      user: existingRefreshToken.user,
       accessToken: accessTokenData,
     }
    }

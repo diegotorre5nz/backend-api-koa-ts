@@ -29,9 +29,9 @@ class CreateUser extends Operation<Input, Output> {
     }
     
     const newUser: User = await userRepository.insert(userData)
-    const accessTokenData = newAccessToken(newUser.id)
     const refreshTokenData = newRefreshToken(newUser.id, ipAddress)
-
+    const accessTokenData = newAccessToken({ userId: newUser.id, refreshToken:  refreshTokenData.token })
+    
     return { 
       user: newUser,
       accessToken: accessTokenData,

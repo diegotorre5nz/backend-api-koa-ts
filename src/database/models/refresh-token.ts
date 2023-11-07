@@ -2,7 +2,7 @@ import { Model, type Pojo, type RelationMappings } from 'objection'
 import { BaseModel } from './base'
 import moment from 'moment'
 import { join } from 'path'
-import { hashString } from '../../utils/crypto'
+import { User } from '../../database/models/user'
 
 export class RefreshToken extends BaseModel {
   static tableName = 'refresh_tokens'
@@ -12,12 +12,13 @@ export class RefreshToken extends BaseModel {
   expiresAt: Date | moment.Moment
   ipAddress: string
   userId: number
+  user?: User
 
   static relationMappings(): RelationMappings {
     return {
       user: {
         relation: Model.BelongsToOneRelation,
-        modelClass: join(__dirname, 'users'),
+        modelClass: join(__dirname, 'user'),
         join: {
           from: 'refresh_tokens.userId',
           to: 'users.id',

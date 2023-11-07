@@ -30,8 +30,8 @@ class CreateSession extends Operation<Input, Output> {
       throw new UnauthorizedError()
     }
 
-    const accessTokenData = newAccessToken(existingUser.id)
     const refreshTokenData = newRefreshToken(existingUser.id, ipAddress)
+    const accessTokenData = newAccessToken({ userId: existingUser.id, refreshToken: refreshTokenData.token })
     const savedRefreshTokenData = await refreshTokenRepository.insert(refreshTokenData)
 
     return { 
