@@ -23,10 +23,7 @@ class RefreshSession extends Operation<Input, Output> {
 
     const tokenVerified = jwtVerified as RefreshTokenPayload
 
-    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.query()
-    .findOne({ token })
-    .withGraphJoined('[user]')
-    .whereRaw('"refresh_tokens"."deleted_at" IS NULL AND "refresh_tokens"."revoked_at" IS NULL AND  "user"."deleted_at" IS NULL')
+    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.findValidTokenAndUserByToken(token)
     
     // RefreshToken or User doesn't exists in the db
     if (!existingRefreshToken) {

@@ -13,7 +13,7 @@ class GetUser extends Operation<Input, Output> {
    protected async run(requestData: Input): Promise<Output> {
     const {id} = requestData
     const existingUser: User | undefined = await userRepository.findById(id)
-    console.log(existingUser)
+
     if (!existingUser) {
       throw new NotFoundError
     }

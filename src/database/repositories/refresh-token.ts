@@ -32,6 +32,18 @@ export class RefreshTokenRepository extends BaseRepository<RefreshToken> {
     return this.findOneBy({ userId, ip_address, token})
   }
 
+  findValidTokenAndUserByToken (token: string): MaybeSingleQueryBuilder<QueryBuilderType<RefreshToken>>{
+    return this.query().findOne({ token })
+    .withGraphJoined('[user]')
+    .whereRaw('"user"."deleted_at" IS NULL AND "user"."deleted_at" IS NULL AND "user"."deleted_at" IS NULL')
+  }
+
+  findValidTokenAndUserByTokenAndUser (token: string, userId: number): MaybeSingleQueryBuilder<QueryBuilderType<RefreshToken>>{
+    return this.query().findOne({ token, userId })
+    .withGraphJoined('[user]')
+    .whereRaw('"user"."deleted_at" IS NULL AND "user"."deleted_at" IS NULL AND "user"."deleted_at" IS NULL')
+  }
+
   findforAdmin(options: FilterOptions) : QueryBuilder<RefreshToken, Page<RefreshToken>> {
     const { order, pagination } = options
 

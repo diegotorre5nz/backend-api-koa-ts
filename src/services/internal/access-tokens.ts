@@ -30,12 +30,10 @@ export async function verifyAccessToken(accessToken: string): Promise<JwtPayload
   try {
     // Don't return directly for catch block to work properly
     const data: JwtPayload | JsonWebTokenError = verify(accessToken, config.get('auth.secret'), config.get('auth.verifyOptions'))
-    const accessTokenPayload = data as AccessToken
-    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.query()
-    .findOne({ token: accessTokenPayload.token, userId: accessTokenPayload.userId })
-    .withGraphJoined('[user]')
-    .whereRaw('"refresh_tokens"."deleted_at" IS NULL AND "refresh_tokens"."revoked_at" IS NULL AND  "user"."deleted_at" IS NULL')
+    const accessTokenPayload = data as AccessTokenPayload
     
+    const existingRefreshToken: RefreshTokenModel | undefined = await refreshTokenRepository.findValidTokenAndUserByTokenAndUser(accessTokenPayload.refreshToken, accessTokenPayload.userId)
+
     // RefreshToken or User doesn't exists in the db
     if (!existingRefreshToken) {
       throw new UnauthorizedError('Refresh Token revoked.')

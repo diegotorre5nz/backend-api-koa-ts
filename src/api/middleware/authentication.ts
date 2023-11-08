@@ -3,22 +3,21 @@ import { validate } from '../middleware/controller-validations'
 import * as schema from '../validations/schemas/v1/users'
 import { UnauthorizedError } from '../../utils/errors'
 import logger from '../../utils/logger'
-import { AccessToken, verifyAccessToken } from '../../services/internal/access-tokens'
-import { verify, Jwt, JsonWebTokenError, JwtPayload } from 'jsonwebtoken'
-import config from 'config'
+import { AccessToken, AccessTokenPayload, verifyAccessToken } from '../../services/internal/access-tokens'
+import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken'
 
-async function getAuthPayload(authorization: any) {
+async function getAuthPayload(authorization: any): Promise<AccessTokenPayload> {
   const parsedHeader = parseHeader(authorization)
   if (!parsedHeader
     || !parsedHeader.value
     || !parsedHeader.scheme
     || parsedHeader.scheme.toLowerCase() !== 'jwt'
   ) {
-    return null
+    throw new UnauthorizedError('No credentials were provided')
   }
   const input = { jwtToken: parsedHeader.value }
   validate(schema.jwtToken, input)
-  const data: AccessToken  = await verifyTokenPayload(input)
+  const data: AccessTokenPayload  = await verifyTokenPayload(input)
   return data
 }
 
@@ -47,37 +46,19 @@ function parseHeader(hdrValue: any) {
   }
 }
 
-async function verifyTokenPayload(input: any): Promise<AccessToken> {
+async function verifyTokenPayload(input: any): Promise<AccessTokenPayload> {
   logger.info({ input }, 'verifyTokenPayload')
   try {
-    var decoded = verify(input.jwtToken, config.get('auth.secret'))
     const jwtPayload: JwtPayload | JsonWebTokenError = await verifyAccessToken(input.jwtToken)
-    const accessTokenPayload = jwtPayload as AccessToken
+    const accessTokenPayload = jwtPayload as AccessTokenPayload
     if(!jwtPayload){
       throw new UnauthorizedError()
     }
-    console.log(accessTokenPayload)
-    //const userId = parseInt(jwtPayload.userId)
     return accessTokenPayload
   } catch(err: any) {
     throw new UnauthorizedError(JSON.stringify(err))
   }
-
-  //const now = Date.now()
-  // if (!jwtPayload || !jwtPayload. || now >= jwtPayload.exp * 1000) {
-  //   throw new UnauthorizedError()
-  // }
-
   
-  // const user = userRepository.findById(userId)
-  // if (!user || user.disabled) {
-  //   throw new UnauthorizedError()
-  // }
-  // logger.info('verifyTokenPayload')
-  // return {
-  //   user,
-  //   loginTimeout: jwtPayload.exp * 1000,
-  // }
 }
 
 module.exports = {
