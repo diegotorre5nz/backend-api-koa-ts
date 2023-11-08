@@ -5,12 +5,8 @@ import { Operation } from "../../operation"
 
 export type Input = Pick<User, 'id'> 
 
-export interface Output {
-  user: User
-}
-
-class GetUser extends Operation<Input, Output> {
-   protected async run(requestData: Input): Promise<Output> {
+class GetUser extends Operation<Input, User> {
+   protected async run(requestData: Input): Promise<User> {
     const {id} = requestData
     const existingUser: User | undefined = await userRepository.findById(id)
 
@@ -24,9 +20,7 @@ class GetUser extends Operation<Input, Output> {
       password: existingUser.password,
     }
 
-    return { 
-      user: existingUser,
-    }
+    return existingUser
    }
 }
 

@@ -14,4 +14,5 @@ export class BaseModel extends Model {
   async $beforeUpdate(): Promise<void> {
     this.updatedAt = new Date()
   }
+
 }

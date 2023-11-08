@@ -6,7 +6,7 @@ import { getUser } from '../../../operations/v1/users/get'
 import type { Input as CreateUserInput } from '../../../operations/v1/users/create'
 import { validate } from '../../middleware/controller-validations'
 import * as schema from '../../validations/schemas/v1/users'
-import  { userWithTokens } from '../../serializers/user'
+import  { userWithTokens, serializedUser } from '../../serializers/user'
 import { authenticated } from '../../middleware/authentication'
 import { User } from '../../../database/models/user'
 import {NotFoundError} from '../../../utils/errors'
@@ -33,12 +33,12 @@ export const me = compose([
       id: ctx.state.userId,
     }
     
-    const operationResult: User | undefined = await getUser.execute(inputData)
+    const existingUser: User | undefined = await getUser.execute(inputData)
 
-    if(!operationResult){
+    if(!existingUser){
       throw new NotFoundError()
     }
-  
-    ctx.ok(JSON.stringify(operationResult))
+    
+    ctx.ok(serializedUser(existingUser))
   },
 ])

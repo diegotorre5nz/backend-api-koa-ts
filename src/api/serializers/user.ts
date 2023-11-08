@@ -3,8 +3,20 @@
  import { AccessToken } from '../../services/internal/access-tokens'
  import { RefreshToken } from '../../services/internal/refresh-tokens'
 
+ export interface SerializedUser {
+  id: number,
+  name: string,
+  email: string,
+  createdAt: Date,
+  updatedAt: Date,
+ }
+
  export interface UserWithTokens {
-  user: User
+  id: number,
+  name: string,
+  email: string,
+  createdAt: Date,
+  updatedAt: Date,
   authorization: AuthorizationTokens
  }
 
@@ -16,7 +28,11 @@
 }
 
 export interface UserWithAccessToken {
-  user: User
+  id: number,
+  name: string,
+  email: string,
+  createdAt: Date,
+  updatedAt: Date,
   authorization: AuthorizationAccessToken
  }
 
@@ -25,9 +41,20 @@ export interface AuthorizationAccessToken {
   accessTokenExpiresAt: Date | moment.Moment
 }
 
+ export const serializedUser = (userInput: User): SerializedUser => ({
+  id: userInput.id,
+  name: userInput.name,
+  email: userInput.email,
+  createdAt: userInput.createdAt,
+  updatedAt: userInput.updatedAt,
+ })
 
-export const userWithTokens = (user: User, accessToken: AccessToken, refreshToken: RefreshToken): UserWithTokens => ({
-  user,
+export const userWithTokens = (userInput: User, accessToken: AccessToken, refreshToken: RefreshToken): UserWithTokens => ({
+  id: userInput.id,
+  name: userInput.name,
+  email: userInput.email,
+  createdAt: userInput.createdAt,
+  updatedAt: userInput.updatedAt,
   authorization: {
     accessToken: accessToken.token,
     accessTokenExpiresAt: accessToken.expiresAt,
@@ -36,8 +63,12 @@ export const userWithTokens = (user: User, accessToken: AccessToken, refreshToke
   }
  })
 
- export const userWithAccessToken = (user: User, accessToken: AccessToken): UserWithAccessToken => ({
-  user,
+ export const userWithAccessToken = (userInput: User, accessToken: AccessToken): UserWithAccessToken => ({
+  id: userInput.id,
+  name: userInput.name,
+  email: userInput.email,
+  createdAt: userInput.createdAt,
+  updatedAt: userInput.updatedAt,
   authorization: {
     accessToken: accessToken.token,
     accessTokenExpiresAt: accessToken.expiresAt,
