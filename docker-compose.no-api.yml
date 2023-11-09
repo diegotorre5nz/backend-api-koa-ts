@@ -1,0 +1,15 @@
+version: '2.4'
+services:
+
+  database:
+    image: sameersbn/postgresql:latest
+    container_name: backend-api-db
+    environment:
+      - DB_NAME=backend-api-db,backend-api-db-test
+      - PG_TRUST_LOCALNET=true
+      - PG_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 5s

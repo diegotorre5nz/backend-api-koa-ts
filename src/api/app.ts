@@ -1,5 +1,7 @@
 // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 // eslint-disable-next-line import/no-unused-modules
+import path from 'path'
+process.env["NODE_CONFIG_DIR"] = process.cwd() + '/src/config' + path.delimiter + process.cwd() + '/src/config/env'
 import 'dotenv/config'
 import { type Server } from 'http'
 import Koa from 'koa'
@@ -15,7 +17,7 @@ import { connect as databaseConnect, close as databaseClose } from '../database/
 interface Services {
   server: Server | null
 }
-
+console.log(config.get('database.connection'))
 const app = new Koa()
 
 const server: Server | null = null

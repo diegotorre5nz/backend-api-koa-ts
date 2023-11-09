@@ -2,19 +2,24 @@
   "name": "backend-api-koa-ts",
   "version": "1.0.0",
   "description": "Backend api based in koa in typescript",
+  "engines": {
+    "node": "~20.6.1",
+    "npm": "~9.8.1"
+  },
   "main": "app.js",
   "scripts": {
     "build": "tsc",
     "format": "npx prettier --write .",
     "test": "npx mocha --opts ./tests/mocha.opts ./tests",
     "test:coverage": "npx nyc mocha --opts ./tests/mocha.opts ./tests",
-    "start": "node dist/src/api/app.js",
+    "db:migrateAndStart": "npm run db:migrate && npm run start",
+    "start": "nodemon dist/src/api/app.js --inspect=0.0.0.0:9229",
     "dev": "nodemon --watch src --ext js --exec 'nf start -j Procfile.dev || exit 1'",
     "lint": "eslint . --ext .ts --report-unused-disable-directives",
     "lint:fix": "eslint . --ext .ts --fix",
     "snyk": "snyk auth $SNYK_TOKEN && snyk test",
     "migrate:make": "knex migrate:make --knexfile ./dist/src/config/knexfile.js",
-    "db:migrate": "NODE_CONFIG_DIR=/Users/diego/dev/node/backend-api-koa-ts/src/config:/Users/diego/dev/node/backend-api-koa-ts/src/config/env knex migrate:latest --knexfile ./dist/src/config/knexfile.js",
+    "db:migrate": "knex migrate:latest --knexfile ./dist/src/config/knexfile.js",
     "db:rollback": "knex migrate:rollback --knexfile ./dist/src/config/knexfile.js",
     "infra": "docker-compose up -d",
     "infra:stop": "docker-compose down"
@@ -43,6 +48,7 @@
     "@typescript-eslint/parser": "^6.8.0",
     "eslint": "^8.51.0",
     "eslint-import-resolver-typescript": "^3.6.1",
+    "nodemon": "^3.0.1",
     "prettier": "3.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
